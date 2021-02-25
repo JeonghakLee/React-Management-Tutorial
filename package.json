@@ -4,15 +4,22 @@
     "scripts": {
         "client": "cd client && yarn start",
         "server": "nodemon server.js",
-        "dev": "concurrently --kill-others-on-fail \"yarn server \" \"yarn client\"" 
+        "dev": "concurrently --kill-others-on-fail \"yarn server \" \"yarn client\""
     },
     "dependencies": {
+        "@material-ui/core": "^4.11.3",
+        "babel-eslint": "^10.1.0",
         "body-parser": "^1.18.3",
-        "express": "^4.16.4"
+        "eslint-config-react-app": "^6.0.0",
+        "express": "^4.16.4",
+        "http-proxy-middleware": "^1.0.6",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "standard": "^16.0.3"
     },
     "devDependencies": {
-        "concurrently": "^4.0.1"
+        "concurrently": "^4.0.1",
+        "eslint-config-react": "^1.1.7",
+        "web-vitals": "^1.1.0"
     }
-
-
 }
