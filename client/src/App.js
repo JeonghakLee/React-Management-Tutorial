@@ -8,35 +8,65 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import {withStyles} from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {withStyles} from '@material-ui/core/styles';
 
-const styles = them => ({
+
+const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: them.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
   },
   table: {
     minWidth: 1080
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
   }
 });
 
+/*
+react 라이브러리가 처음 component를 실행하는 순서
+
+1) constructor()
+
+2) componentWillMount() mount되기전
+
+3) render() 컴포넌트 화면 출력 
+
+4) componentDidMount()
+
+상태의 변화를 자동으로 감지해서 함수 불러줌
+즉, 상태만 잘 관리 해주면됨
+props or state 가 변경되는 경우 => shouldComponentUpdate()
+
+*/
 class App extends Component {
 
   state = {
-    customers: ""
+    customers: "",
+    completed: 0
   }
   
   componentDidMount(){
+    this.timer = setInterval(this.progress, 20); //0.02초마다 progress함수가 반복적으로 수행
+    
     this.callApi()
     .then(res => this.setState({customers: res}))
     .catch(err => console.log(err));
+    
   }
 
   callApi = async () => {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1});
   }
 
   render() {
@@ -57,7 +87,13 @@ class App extends Component {
           <TableBody>
             {this.state.customers ? this.state.customers.map(c => {
               return (<Customer key = {c.id} id={c.id} iamge={c.image} name={c.name}birthday={c.birthday}gender={c.gender}job={c.job}/>);
-            }) : ""}
+            }) : 
+              <TableRow>
+                <TableCell colSpan="6" align="center">
+                  <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+                </TableCell>
+              </TableRow>
+            }
           </TableBody>
         </Table>
       </Paper>
